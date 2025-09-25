@@ -1,8 +1,7 @@
-
-//En este script tenemos la creacion del formulario , en donde la persona coloca los datos respectivos
-//Autor : Luis Gonzalo Basurco Monroy
-//Fecha Creación: 24 de Septiembre
-
+//Finalizamos todo el codigo , agregando todo lo necesario , con sus activitys y los requisitos pedidos
+//Autor: Luis Gonzalo Basurco Monroy
+//fecha creacion: 24 de Septiembre
+//Fecha modificacion : 25 de Septiembre
 
 package com.example.editorperfil
 
@@ -69,7 +68,6 @@ class FormularioActivity : AppCompatActivity() {
             }
 
             val usuario = Usuario(nombre, edad, ciudad, email)
-            //se envia al resumen activity
             val intent = Intent(this, ResumenActivity::class.java).apply {
                 putExtra(EXTRA_USUARIO, usuario)
             }
