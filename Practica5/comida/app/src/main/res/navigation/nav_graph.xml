@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/inicioFragment">
+
+    <fragment
+        android:id="@+id/inicioFragment"
+        android:name="com.example.comida.InicioFragment"
+        android:label="Inicio">
+        <action
+            android:id="@+id/action_inicio_to_seleccionComida"
+            app:destination="@id/seleccionComidaFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/seleccionComidaFragment"
+        android:name="com.example.comida.SeleccionComidaFragment"
+        android:label="Comida">
+        <action
+            android:id="@+id/action_comida_to_extras"
+            app:destination="@id/seleccionExtrasFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/seleccionExtrasFragment"
+        android:name="com.example.comida.SeleccionExtrasFragment"
+        android:label="Extras">
+        <action
+            android:id="@+id/action_extras_to_resumen"
+            app:destination="@id/resumenPedidoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resumenPedidoFragment"
+        android:name="com.example.comida.ResumenPedidoFragment"
+        android:label="Resumen">
+        <action
+            android:id="@+id/action_resumen_to_inicio"
+            app:destination="@id/inicioFragment"
+            app:popUpTo="@id/inicioFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
