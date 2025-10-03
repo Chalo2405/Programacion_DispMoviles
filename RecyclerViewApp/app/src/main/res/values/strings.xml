@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RecyclerViewApp</string>
+
+    <!-- Campos del diálogo de edición -->
+    <string name="msg_name">Nombre</string>
+    <string name="msg_edad">Edad</string>
+    <string name="msg_email">Correo</string>
+
+    <!-- Textos de acciones / diálogos -->
+    <string name="msg_accion">Acción</string>
+    <string name="msg_editar">Editar</string>
+    <string name="msg_eliminar">Eliminar</string>
+    <string name="msg_guardar">Guardar</string>
+    <string name="msg_cancelar">Cancelar</string>
+    <string name="msg_editar_usuario">Editar usuario</string>
+</resources>
