@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 
-//aca esta la pantalla que nos permite crear o editar un usuario , si se recibe un usuario , lo actualizara , sino , se creara uno nuevo
 class UserFormScreen extends StatefulWidget {
   final User? usuario;
   final int? indice;
@@ -14,7 +13,10 @@ class UserFormScreen extends StatefulWidget {
 
 class _UserFormScreenState extends State<UserFormScreen> {
   final _formKey = GlobalKey<FormState>();
+
   late String _nombre;
+  late String _correo;
+  late int _edad;
   String _genero = 'Masculino';
   bool _activo = true;
 
@@ -23,10 +25,14 @@ class _UserFormScreenState extends State<UserFormScreen> {
     super.initState();
     if (widget.usuario != null) {
       _nombre = widget.usuario!.nombre;
+      _edad = widget.usuario!.edad;
+      _correo = widget.usuario!.correo;
       _genero = widget.usuario!.genero;
       _activo = widget.usuario!.activo;
     } else {
       _nombre = '';
+      _edad = 0;
+      _correo = '';
     }
   }
 
@@ -34,22 +40,67 @@ class _UserFormScreenState extends State<UserFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.usuario == null ? 'Agregar Usuario' : 'Editar Usuario'),
+        title:
+        Text(widget.usuario == null ? 'Agregar Usuario' : 'Editar Usuario'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
+              // Nombre
               TextFormField(
                 initialValue: _nombre,
                 decoration: const InputDecoration(labelText: 'Nombre'),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Ingrese un nombre válido' : null,
+                value == null || value.trim().isEmpty
+                    ? 'Ingrese un nombre válido'
+                    : null,
                 onSaved: (value) => _nombre = value!,
               ),
+
               const SizedBox(height: 20),
+
+              // Edad
+              TextFormField(
+                initialValue: _edad == 0 ? '' : _edad.toString(),
+                decoration: const InputDecoration(labelText: 'Edad'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese una edad';
+                  }
+                  final n = int.tryParse(value);
+                  if (n == null || n <= 0) {
+                    return 'La edad debe ser mayor a 0';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _edad = int.parse(value!),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Correo
+              TextFormField(
+                initialValue: _correo,
+                decoration: const InputDecoration(labelText: 'Correo'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese un correo';
+                  }
+                  final valid = RegExp(
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
+                      .hasMatch(value);
+                  if (!valid) return 'Correo no válido';
+                  return null;
+                },
+                onSaved: (value) => _correo = value!,
+              ),
+
+              const SizedBox(height: 20),
+
               const Text('Género'),
               Row(
                 children: [
@@ -58,7 +109,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
                       title: const Text('Masculino'),
                       value: 'Masculino',
                       groupValue: _genero,
-                      onChanged: (value) => setState(() => _genero = value!),
+                      onChanged: (value) =>
+                          setState(() => _genero = value!),
                     ),
                   ),
                   Expanded(
@@ -66,28 +118,42 @@ class _UserFormScreenState extends State<UserFormScreen> {
                       title: const Text('Femenino'),
                       value: 'Femenino',
                       groupValue: _genero,
-                      onChanged: (value) => setState(() => _genero = value!),
+                      onChanged: (value) =>
+                          setState(() => _genero = value!),
                     ),
                   ),
                 ],
               ),
+
+              const SizedBox(height: 20),
+
               SwitchListTile(
                 title: const Text('Activo'),
                 value: _activo,
-                onChanged: (value) => setState(() => _activo = value),
+                onChanged: (value) =>
+                    setState(() => _activo = value),
               ),
+
               const SizedBox(height: 30),
+
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    final user =
-                    User(nombre: _nombre, genero: _genero, activo: _activo);
+
+                    final user = User(
+                      nombre: _nombre,
+                      edad: _edad,
+                      correo: _correo,
+                      genero: _genero,
+                      activo: _activo,
+                    );
+
                     Navigator.pop(context, user);
                   }
                 },
-                child:
-                Text(widget.usuario == null ? 'Guardar' : 'Actualizar'),
+                child: Text(
+                    widget.usuario == null ? 'Guardar' : 'Actualizar'),
               ),
             ],
           ),

@@ -4,28 +4,52 @@ import '../viewmodels/user_view_model.dart';
 import '../models/user.dart';
 import 'user_form_screen.dart';
 
-
-// esto es la pagina principal la cual muestra a todos los usuarios los cuales estan registrados
-class UserListScreen extends StatelessWidget {
+class UserListScreen extends StatefulWidget {
   const UserListScreen({super.key});
 
   @override
+  State<UserListScreen> createState() => _UserListScreenState();
+}
+
+class _UserListScreenState extends State<UserListScreen> {
+  bool mostrarSoloActivos = false;
+
+  @override
   Widget build(BuildContext context) {
-    //aca se obtiene el viewmodel para entrar a la lista de usuarios
     final viewModel = context.watch<UserViewModel>();
+    final usuarios = mostrarSoloActivos
+        ? viewModel.usuariosActivos
+        : viewModel.usuarios;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Lista de Usuarios')),
+      appBar: AppBar(
+        title: const Text('Lista de Usuarios'),
+        actions: [
+          Switch(
+            value: mostrarSoloActivos,
+            activeColor: Colors.white,
+            onChanged: (value) =>
+                setState(() => mostrarSoloActivos = value),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: Center(child: Text('Activos')),
+          ),
+        ],
+      ),
       body: ListView.builder(
-        itemCount: viewModel.usuarios.length,
+        itemCount: usuarios.length,
         itemBuilder: (context, index) {
-          final user = viewModel.usuarios[index];
+          final user = usuarios[index];
+          final originalIndex = viewModel.usuarios.indexOf(user);
+
           return Card(
             child: ListTile(
-              title: Text(user.nombre),
-              subtitle:
-              Text('${user.genero} - ${user.activo ? 'Activo' : 'Inactivo'}'),
-              //aca tenemos los botones de acciones
+              title: Text('${user.nombre} (${user.edad} años)'),
+              subtitle: Text(
+                '${user.correo}\n${user.genero} - ${user.activo ? 'Activo' : 'Inactivo'}',
+              ),
+              isThreeLine: true,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -37,18 +61,19 @@ class UserListScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (_) => UserFormScreen(
                             usuario: user,
-                            indice: index,
+                            indice: originalIndex,
                           ),
                         ),
                       );
                       if (actualizado != null && actualizado is User) {
-                        viewModel.editarUsuario(index, actualizado);
+                        viewModel.editarUsuario(originalIndex, actualizado);
                       }
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => viewModel.eliminarUsuario(index),
+                    onPressed: () =>
+                        viewModel.eliminarUsuario(originalIndex),
                   ),
                 ],
               ),
