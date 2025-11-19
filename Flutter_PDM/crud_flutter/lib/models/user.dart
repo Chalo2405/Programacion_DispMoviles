@@ -1,3 +1,4 @@
+//tenemos aqui la creacion de los usuarios con sus variables
 class User {
   String nombre;
   int edad;

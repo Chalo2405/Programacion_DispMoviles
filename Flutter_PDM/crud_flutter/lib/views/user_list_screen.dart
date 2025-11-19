@@ -5,7 +5,12 @@ import '../models/user.dart';
 import 'user_form_screen.dart';
 
 class UserListScreen extends StatefulWidget {
-  const UserListScreen({super.key});
+  final String email;
+
+  const UserListScreen({
+    super.key,
+    required this.email,
+  });
 
   @override
   State<UserListScreen> createState() => _UserListScreenState();
@@ -23,7 +28,8 @@ class _UserListScreenState extends State<UserListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Usuarios'),
+        //aqui se agrega la funcionalidad extra de el mensaje de bienvenida
+        title: Text('Bienvenido: ${widget.email}'),
         actions: [
           Switch(
             value: mostrarSoloActivos,
